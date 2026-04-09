@@ -72,32 +72,32 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IRC-01 | — | Pending |
-| IRC-02 | — | Pending |
-| IRC-03 | — | Pending |
-| MAP-01 | — | Pending |
-| MAP-02 | — | Pending |
-| MAP-03 | — | Pending |
-| MAP-04 | — | Pending |
-| MAP-05 | — | Pending |
-| ADCP-01 | — | Pending |
-| ADCP-02 | — | Pending |
-| ADCP-03 | — | Pending |
-| ADCP-04 | — | Pending |
-| DEV-01 | — | Pending |
-| DEV-02 | — | Pending |
-| DEV-03 | — | Pending |
-| DEV-04 | — | Pending |
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| INFRA-04 | — | Pending |
+| IRC-01 | Phase 3 | Pending |
+| IRC-02 | Phase 3 | Pending |
+| IRC-03 | Phase 3 | Pending |
+| MAP-01 | Phase 1 | Pending |
+| MAP-02 | Phase 2 | Pending |
+| MAP-03 | Phase 2 | Pending |
+| MAP-04 | Phase 2 | Pending |
+| MAP-05 | Phase 2 | Pending |
+| ADCP-01 | Phase 1 | Pending |
+| ADCP-02 | Phase 1 | Pending |
+| ADCP-03 | Phase 1 | Pending |
+| ADCP-04 | Phase 1 | Pending |
+| DEV-01 | Phase 3 | Pending |
+| DEV-02 | Phase 1 | Pending |
+| DEV-03 | Phase 3 | Pending |
+| DEV-04 | Phase 3 | Pending |
+| INFRA-01 | Phase 4 | Pending |
+| INFRA-02 | Phase 5 | Pending |
+| INFRA-03 | Phase 5 | Pending |
+| INFRA-04 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20 ⚠️
+- Mapped to phases: 20
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after initial definition*
+*Last updated: 2026-04-09 after roadmap creation*
