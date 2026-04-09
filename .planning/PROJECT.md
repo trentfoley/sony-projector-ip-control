@@ -1,0 +1,83 @@
+# Sony Projector IR-to-ADCP Bridge
+
+## What This Is
+
+A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a TSOP38238 sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector. The Pi also serves as a WiFi-to-Ethernet NAT bridge, providing network connectivity to the projector where no ethernet run exists.
+
+## Core Value
+
+Press a button on the Sony remote, the projector responds — the IR receiver works again.
+
+## Requirements
+
+### Validated
+
+(None yet — ship to validate)
+
+### Active
+
+- [ ] ADCP client connects to projector on TCP:53595 with SHA256 challenge-response auth
+- [ ] IR commands received via kernel gpio-ir overlay + evdev on GPIO 18
+- [ ] Scancode-to-ADCP command mapping is configurable via YAML
+- [ ] Debounce/repeat logic prevents projector flooding while supporting held buttons
+- [ ] Power on/off, input switching, menu navigation, and blanking work from the remote
+- [ ] WiFi-to-Ethernet NAT bridge gives the projector network access via the Pi's wlan0
+- [ ] systemd services auto-start both the IR bridge and WiFi bridge on boot
+- [ ] Discover mode prints raw scancodes to aid mapping new remote buttons
+- [ ] Mock ADCP server enables development and testing without the projector
+
+### Out of Scope
+
+- Web UI or REST API for projector control — remote control is the interface
+- Motorized lens control — XW5000ES has a manual lens (hardware limitation)
+- Home Assistant or smart home integration — standalone daemon only
+- Multi-projector support — single projector, single Pi
+
+## Context
+
+- **Projector**: Sony VPL-XW5000ES, ADCP over TCP:53595, ASCII protocol with `\r\n` termination
+- **Auth**: SHA256 challenge-response (or NOKEY if auth disabled in projector settings)
+- **IR protocol**: Sony SIRC (12, 15, or 20-bit — kernel tries all when protocol=sony)
+- **Hardware**: TSOP38238 IR sensor wired to RPi 3B GPIO 18 (3.3V, no external pull-up needed)
+- **Network**: Pi connects to home WiFi via wlan0, projector connects to Pi's eth0 (192.168.4.0/24 subnet)
+- **Reference implementations**: tokyotexture/homeassistant-custom-components (SONY_ADCP.py), kennymc-c/ucr-integration-sonyADCP (most complete, has SHA256 auth)
+- **Risk**: Remote's exact SIRC scancodes are undocumented — mitigated by discover mode
+- **Risk**: Projector may reject ADCP in deep standby — requires "Network Standby" enabled in projector settings
+
+## Constraints
+
+- **Hardware**: Raspberry Pi 3B (existing), TSOP38238 sensor on GPIO 18
+- **Stack**: Python 3 with asyncio, pyyaml, evdev — minimal dependencies for embedded use
+- **IR decoding**: Kernel gpio-ir overlay + ir-keytable (not pigpio — unreliable userspace timing)
+- **Connection model**: Open-per-command (connect → auth → send → close) due to projector's 60s idle timeout
+- **Network**: NAT routing only (true L2 bridging impossible over WiFi)
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Kernel gpio-ir over pigpio | Battle-tested, interrupt-driven vs unreliable userspace timing | — Pending |
+| Python evdev over triggerhappy | Avoids per-press shell spawn latency | — Pending |
+| Open-per-command ADCP | Projector has 60s idle timeout, auth is per-connection anyway | — Pending |
+| NAT routing over L2 bridge | WiFi doesn't support L2 bridging | — Pending |
+| asyncio event loop | Non-blocking IR listen + ADCP send in single process | — Pending |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-04-09 after initialization*
