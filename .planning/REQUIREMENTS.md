@@ -1,0 +1,103 @@
+# Requirements: Sony Projector IR-to-ADCP Bridge
+
+**Defined:** 2026-04-09
+**Core Value:** Press a button on the Sony remote, the projector responds — the IR receiver works again.
+
+## v1 Requirements
+
+### IR Control
+
+- [ ] **IRC-01**: User can power on the projector by pressing the power button on the Sony remote
+- [ ] **IRC-02**: User can power off the projector by pressing the power button on the Sony remote
+- [ ] **IRC-03**: User can navigate projector menus (up/down/left/right/enter/back) via remote
+
+### Command Mapping
+
+- [ ] **MAP-01**: Scancode-to-ADCP command mapping is configurable via YAML config file
+- [ ] **MAP-02**: Non-repeating commands (power, input) fire once per press, ignoring held-button repeats
+- [ ] **MAP-03**: Repeatable commands (menu nav) fire continuously when held, rate-limited to prevent flooding
+- [ ] **MAP-04**: Unknown scancodes are logged at INFO level for passive discovery
+- [ ] **MAP-05**: Global 100ms minimum between ADCP sends to prevent projector flooding
+
+### ADCP Client
+
+- [ ] **ADCP-01**: Client connects to projector on TCP port 53595 with configurable timeout
+- [ ] **ADCP-02**: Client authenticates via SHA256 challenge-response, with NOKEY fallback when auth is disabled
+- [ ] **ADCP-03**: Client retries transient failures (2-3 attempts, 200ms backoff)
+- [ ] **ADCP-04**: Client parses ADCP responses and logs typed error codes (err_auth, err_cmd, err_val, err_inactive)
+
+### Development & Bootstrap
+
+- [ ] **DEV-01**: User can run `--discover` mode to print raw scancodes without sending ADCP commands
+- [ ] **DEV-02**: Mock ADCP server simulates projector for development and testing without hardware
+- [ ] **DEV-03**: IR input device is auto-detected by name (gpio_ir_recv), not hardcoded path
+- [ ] **DEV-04**: Daemon shuts down gracefully on SIGTERM/SIGINT, releasing TCP and evdev resources
+
+### Infrastructure
+
+- [ ] **INFRA-01**: WiFi-to-Ethernet NAT bridge routes wlan0 traffic to eth0 (192.168.4.0/24 subnet)
+- [ ] **INFRA-02**: systemd services auto-start IR bridge and WiFi bridge on boot with Restart=always
+- [ ] **INFRA-03**: Install script deploys all dependencies, code, config, and services on a fresh RPi
+- [ ] **INFRA-04**: Hardware watchdog reboots the Pi if the daemon hangs (WatchdogSec + sd_notify)
+
+## v2 Requirements
+
+### IR Control
+
+- **IRC-04**: User can switch inputs (HDMI 1/2) via remote
+- **IRC-05**: User can blank/mute the projector image via remote
+- **IRC-06**: User can switch picture presets, aspect ratio, and motionflow via remote
+
+### Reliability
+
+- **REL-01**: Config reload without restart via SIGHUP
+- **REL-02**: Structured JSON logging via `--log-format json`
+- **REL-03**: Read-only root filesystem (overlayfs) for SD card corruption protection
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Web UI or REST API | The physical remote is the interface; UCR and HA integrations exist for app control |
+| Home Assistant integration | Two existing integrations cover this (tokyotexture, kennymc-c) |
+| Multi-projector support | Single projector, single Pi; two projectors = two Pis |
+| Motorized lens control | VPL-XW5000ES has a manual lens — no ADCP commands exist |
+| Persistent ADCP connections | Projector has 60s idle timeout + per-connection auth; open-per-command is simpler |
+| IR transmitting/blasting | Receive-only architecture; no IR LED hardware |
+| OTA update mechanism | SSH + git pull + systemctl restart is sufficient |
+| Status polling/dashboard | Use RM-PJ28 INFO button on projected image |
+| Volume control | XW5000ES has no speaker/volume ADCP commands |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| IRC-01 | — | Pending |
+| IRC-02 | — | Pending |
+| IRC-03 | — | Pending |
+| MAP-01 | — | Pending |
+| MAP-02 | — | Pending |
+| MAP-03 | — | Pending |
+| MAP-04 | — | Pending |
+| MAP-05 | — | Pending |
+| ADCP-01 | — | Pending |
+| ADCP-02 | — | Pending |
+| ADCP-03 | — | Pending |
+| ADCP-04 | — | Pending |
+| DEV-01 | — | Pending |
+| DEV-02 | — | Pending |
+| DEV-03 | — | Pending |
+| DEV-04 | — | Pending |
+| INFRA-01 | — | Pending |
+| INFRA-02 | — | Pending |
+| INFRA-03 | — | Pending |
+| INFRA-04 | — | Pending |
+
+**Coverage:**
+- v1 requirements: 20 total
+- Mapped to phases: 0
+- Unmapped: 20 ⚠️
+
+---
+*Requirements defined: 2026-04-09*
+*Last updated: 2026-04-09 after initial definition*
