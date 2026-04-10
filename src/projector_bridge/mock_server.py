@@ -161,4 +161,8 @@ if __name__ == "__main__":
     parser.add_argument("--password", default="Projector", help="Auth password")
     parser.add_argument("--nokey", action="store_true", help="Disable auth (NOKEY mode)")
     args = parser.parse_args()
-    asyncio.run(run_standalone(host=args.host, port=args.port, password=args.password, nokey=args.nokey))
+    asyncio.run(
+        run_standalone(
+            host=args.host, port=args.port, password=args.password, nokey=args.nokey
+        )
+    )

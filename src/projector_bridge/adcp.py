@@ -70,7 +70,7 @@ async def send_command(config: ProjectorConfig, command: str) -> str:
             asyncio.open_connection(config.host, config.port),
             timeout=config.timeout_connect,
         )
-    except (OSError, asyncio.TimeoutError) as err:
+    except (OSError, TimeoutError) as err:
         raise ConnectionError(
             f"Failed to connect to {config.host}:{config.port}: {err}"
         ) from err
@@ -81,7 +81,7 @@ async def send_command(config: ProjectorConfig, command: str) -> str:
             challenge_line = await asyncio.wait_for(
                 reader.readline(), timeout=config.timeout_read
             )
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise ConnectionError("Timeout waiting for challenge from projector") from err
 
         challenge = challenge_line.decode("ascii").strip()
@@ -100,7 +100,7 @@ async def send_command(config: ProjectorConfig, command: str) -> str:
                 auth_response_line = await asyncio.wait_for(
                     reader.readline(), timeout=config.timeout_read
                 )
-            except asyncio.TimeoutError as err:
+            except TimeoutError as err:
                 raise ConnectionError("Timeout waiting for auth response") from err
 
             auth_response = auth_response_line.decode("ascii").strip()
@@ -116,7 +116,7 @@ async def send_command(config: ProjectorConfig, command: str) -> str:
             response_line = await asyncio.wait_for(
                 reader.readline(), timeout=config.timeout_read
             )
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             raise ConnectionError("Timeout waiting for command response") from err
 
         return parse_response(response_line.decode("ascii").strip())
