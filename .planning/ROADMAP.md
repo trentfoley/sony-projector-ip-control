@@ -41,7 +41,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. A repeatable command (e.g., menu-up) fires continuously when held, with a minimum 100ms gap between sends
   3. An unknown scancode is logged at INFO level with its hex value, not silently dropped
   4. Rapid successive button presses never produce ADCP sends closer than 100ms apart
-**Plans**: TBD
+**Plans**: 2 (02-01 implementation, 02-02 tests)
 
 ### Phase 3: IR Listener and Application
 **Goal**: User can press buttons on the Sony remote and the projector responds, with discover mode available for mapping new buttons
@@ -84,7 +84,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. ADCP Client, Config, and Mock Server | 3/3 | Complete | 2026-04-10 |
-| 2. Command Mapper | 0/TBD | Not started | - |
+| 2. Command Mapper | 0/2 | Planned | - |
 | 3. IR Listener and Application | 0/TBD | Not started | - |
 | 4. WiFi Bridge | 0/TBD | Not started | - |
 | 5. Deployment and Hardening | 0/TBD | Not started | - |

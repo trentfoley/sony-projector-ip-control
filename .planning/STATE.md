@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 complete, ready to plan Phase 2
+stopped_at: Phase 2 planned, ready to execute Phase 2
 last_updated: "2026-04-10T04:00:00.000Z"
 last_activity: 2026-04-10 -- Phase 01 execution complete (3/3 plans)
 progress:
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Press a button on the Sony remote, the projector responds -- the IR receiver works again.
-**Current focus:** Phase 02 — command-mapper (next)
+**Current focus:** Phase 02 — command-mapper (planned, ready for execution)
 
 ## Current Position
 
-Phase: 01 (adcp-client-config-and-mock-server) — COMPLETE
-Plan: 3 of 3
-Status: Phase 01 complete, all plans executed
-Last activity: 2026-04-10 -- Phase 01 execution complete
+Phase: 02 (command-mapper) — PLANNED
+Plan: 0 of 2
+Status: Plans verified, ready for execution
+Last activity: 2026-04-10 -- Phase 02 planning complete (2 plans)
 
 Progress: [##........] 20%
 
