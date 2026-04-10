@@ -28,10 +28,10 @@
 
 ### Development & Bootstrap
 
-- [ ] **DEV-01**: User can run `--discover` mode to print raw scancodes without sending ADCP commands
+- [x] **DEV-01**: User can run `--discover` mode to print raw scancodes without sending ADCP commands
 - [ ] **DEV-02**: Mock ADCP server simulates projector for development and testing without hardware
 - [x] **DEV-03**: IR input device is auto-detected by name (gpio_ir_recv), not hardcoded path
-- [ ] **DEV-04**: Daemon shuts down gracefully on SIGTERM/SIGINT, releasing TCP and evdev resources
+- [x] **DEV-04**: Daemon shuts down gracefully on SIGTERM/SIGINT, releasing TCP and evdev resources
 
 ### Infrastructure
 
@@ -84,10 +84,10 @@
 | ADCP-02 | Phase 1 | Pending |
 | ADCP-03 | Phase 1 | Pending |
 | ADCP-04 | Phase 1 | Pending |
-| DEV-01 | Phase 3 | Pending |
+| DEV-01 | Phase 3 | Complete |
 | DEV-02 | Phase 1 | Pending |
 | DEV-03 | Phase 3 | Complete |
-| DEV-04 | Phase 3 | Pending |
+| DEV-04 | Phase 3 | Complete |
 | INFRA-01 | Phase 4 | Pending |
 | INFRA-02 | Phase 5 | Pending |
 | INFRA-03 | Phase 5 | Pending |

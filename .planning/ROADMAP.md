@@ -56,7 +56,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 Plans:
 - [x] 03-01-PLAN.md — IR listener module (evdev device discovery + async event loop + tests)
-- [ ] 03-02-PLAN.md — CLI entry point, discover mode, signal handling + tests
+- [x] 03-02-PLAN.md — CLI entry point, discover mode, signal handling + tests
 
 ### Phase 4: WiFi Bridge
 **Goal**: The projector has network access through the Pi's WiFi connection, with no manual network configuration needed after setup
