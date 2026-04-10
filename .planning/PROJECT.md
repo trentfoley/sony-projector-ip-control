@@ -12,14 +12,14 @@ Press a button on the Sony remote, the projector responds — the IR receiver wo
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] ADCP client connects to projector on TCP:53595 with SHA256 challenge-response auth — Validated in Phase 1: ADCP Client, Config, and Mock Server
+- [x] Scancode-to-ADCP command mapping is configurable via YAML — Validated in Phase 1: Config system
+- [x] Mock ADCP server enables development and testing without the projector — Validated in Phase 1: Mock Server
+- [x] Debounce/repeat logic prevents projector flooding while supporting held buttons — Validated in Phase 2: Command Mapper
 
 ### Active
 
-- [ ] ADCP client connects to projector on TCP:53595 with SHA256 challenge-response auth
 - [ ] IR commands received via kernel gpio-ir overlay + evdev on GPIO 18
-- [ ] Scancode-to-ADCP command mapping is configurable via YAML
-- [ ] Debounce/repeat logic prevents projector flooding while supporting held buttons
 - [ ] Power on/off, input switching, menu navigation, and blanking work from the remote
 - [ ] WiFi-to-Ethernet NAT bridge gives the projector network access via the Pi's wlan0
 - [ ] systemd services auto-start both the IR bridge and WiFi bridge on boot
@@ -80,4 +80,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-09 after initialization*
+*Last updated: 2026-04-09 after Phase 2 completion*
