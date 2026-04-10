@@ -53,7 +53,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Running with --discover prints raw scancodes to stdout without sending any ADCP commands
   4. The IR input device is found automatically by name (gpio_ir_recv) regardless of /dev/input path
   5. Sending SIGTERM or SIGINT to the daemon shuts it down cleanly, releasing TCP and evdev resources
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 03-01-PLAN.md — IR listener module (evdev device discovery + async event loop + tests)
+- [ ] 03-02-PLAN.md — CLI entry point, discover mode, signal handling + tests
 
 ### Phase 4: WiFi Bridge
 **Goal**: The projector has network access through the Pi's WiFi connection, with no manual network configuration needed after setup
@@ -85,6 +88,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|----------------|--------|-----------|
 | 1. ADCP Client, Config, and Mock Server | 3/3 | Complete | 2026-04-10 |
 | 2. Command Mapper | 0/2 | Planned | - |
-| 3. IR Listener and Application | 0/TBD | Not started | - |
+| 3. IR Listener and Application | 0/2 | Planned | - |
 | 4. WiFi Bridge | 0/TBD | Not started | - |
 | 5. Deployment and Hardening | 0/TBD | Not started | - |
