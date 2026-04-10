@@ -340,17 +340,17 @@ async def find_ir_device(name: str, timeout: float = 30.0) -> InputDevice:
 | A2 | Default config search order (./projector-bridge.yaml then /etc/) | Pitfall 4 | Minor -- user can always pass --config |
 | A3 | Scancode hex format from MSC_SCAN matches config mapping keys when formatted as `0x{value:06x}` | Architecture Pattern 2 | Critical -- if format differs, no mappings will match. Must be validated on hardware via discover mode |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Scancode hex format width**
+1. **RESOLVED: Scancode hex format width** — Use `06x` zero-padding; verify on hardware via discover mode. Design accepts this risk: format width is a constant that is easy to change, and DEBUG logging of raw integers makes mismatches detectable.
    - What we know: Config uses `"0x010015"` (6 hex digits). Sony-12 uses 12 bits, Sony-15 uses 15 bits, Sony-20 uses 20 bits. The kernel packs these differently.
    - What's unclear: Whether `06x` zero-padding matches what the kernel actually outputs. The kernel may use variable-width hex.
-   - Recommendation: Use discover mode on real hardware to verify. Format with `06x` padding and log the raw integer too at DEBUG level so mismatches are detectable. The format width should be a constant that is easy to change.
+   - Resolution: Use discover mode on real hardware to verify. Format with `06x` padding and log the raw integer too at DEBUG level so mismatches are detectable. The format width should be a constant that is easy to change.
 
-2. **Whether EV_MSC always precedes EV_KEY for IR events**
+2. **RESOLVED: Whether EV_MSC always precedes EV_KEY for IR events** — Handle EV_KEY without preceding MSC_SCAN by logging a warning and skipping. Implemented in listener.py's event loop.
    - What we know: The standard kernel event sequence is MSC_SCAN, then EV_KEY, then EV_SYN. [CITED: kernel docs event-codes.txt]
    - What's unclear: Whether this ordering is guaranteed by the rc subsystem or just typical.
-   - Recommendation: Handle the case where EV_KEY arrives without a preceding MSC_SCAN by using the keycode as a fallback. Log a warning.
+   - Resolution: Handle the case where EV_KEY arrives without a preceding MSC_SCAN by using the keycode as a fallback. Log a warning.
 
 ## Validation Architecture
 
