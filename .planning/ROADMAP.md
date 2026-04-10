@@ -55,7 +55,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. Sending SIGTERM or SIGINT to the daemon shuts it down cleanly, releasing TCP and evdev resources
 **Plans**: 2 plans
 Plans:
-- [ ] 03-01-PLAN.md — IR listener module (evdev device discovery + async event loop + tests)
+- [x] 03-01-PLAN.md — IR listener module (evdev device discovery + async event loop + tests)
 - [ ] 03-02-PLAN.md — CLI entry point, discover mode, signal handling + tests
 
 ### Phase 4: WiFi Bridge

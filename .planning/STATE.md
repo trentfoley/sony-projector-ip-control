@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 context gathered
-last_updated: "2026-04-10T02:13:09.321Z"
-last_activity: 2026-04-10
+status: executing
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-04-10T02:44:24Z"
+last_activity: 2026-04-10 -- Completed 03-01 IR listener module
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 2
-  percent: 40
+  total_plans: 7
+  completed_plans: 3
+  percent: 43
 ---
 
 # Project State
@@ -26,26 +26,27 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 3
-Plan: Not started
-Status: Plans verified, ready for execution
-Last activity: 2026-04-10
+Plan: 1 of 2 complete
+Status: Executing
+Last activity: 2026-04-10 -- Completed 03-01 IR listener module
 
-Progress: [##........] 20%
+Progress: [###.......] 30%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 5
-- Average duration: ~1 min/plan (inline execution)
-- Total execution time: ~5 minutes
+- Total plans completed: 6
+- Average duration: ~1.5 min/plan
+- Total execution time: ~9 minutes
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3/3 | ~5 min | ~1.5 min |
-| 02 | 2 | - | - |
+| 02 | 2/2 | ~3 min | ~1.5 min |
+| 03 | 1/2 | 4 min | 4 min |
 
 **Recent Trend:**
 
@@ -63,6 +64,8 @@ Recent decisions affecting current work:
 
 - Roadmap: Merged config system into Phase 1 with ADCP client (config is thin, ~50 lines of dataclasses)
 - Roadmap: WiFi bridge is Phase 4 (independent, can run in parallel with Phases 1-3)
+- 03-01: Used sys.modules patching for evdev mocks (lazy import inside function requires injecting into sys.modules)
+- 03-01: Scancodes extracted from EV_MSC/MSC_SCAN events, not EV_KEY.code (raw IR scancodes match config keys)
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-10T02:13:09.319Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-ir-listener-and-application/03-CONTEXT.md
+Last session: 2026-04-10T02:44:24Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-ir-listener-and-application/03-01-SUMMARY.md

@@ -7,9 +7,9 @@
 
 ### IR Control
 
-- [ ] **IRC-01**: User can power on the projector by pressing the power button on the Sony remote
-- [ ] **IRC-02**: User can power off the projector by pressing the power button on the Sony remote
-- [ ] **IRC-03**: User can navigate projector menus (up/down/left/right/enter/back) via remote
+- [x] **IRC-01**: User can power on the projector by pressing the power button on the Sony remote
+- [x] **IRC-02**: User can power off the projector by pressing the power button on the Sony remote
+- [x] **IRC-03**: User can navigate projector menus (up/down/left/right/enter/back) via remote
 
 ### Command Mapping
 
@@ -30,7 +30,7 @@
 
 - [ ] **DEV-01**: User can run `--discover` mode to print raw scancodes without sending ADCP commands
 - [ ] **DEV-02**: Mock ADCP server simulates projector for development and testing without hardware
-- [ ] **DEV-03**: IR input device is auto-detected by name (gpio_ir_recv), not hardcoded path
+- [x] **DEV-03**: IR input device is auto-detected by name (gpio_ir_recv), not hardcoded path
 - [ ] **DEV-04**: Daemon shuts down gracefully on SIGTERM/SIGINT, releasing TCP and evdev resources
 
 ### Infrastructure
@@ -72,9 +72,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IRC-01 | Phase 3 | Pending |
-| IRC-02 | Phase 3 | Pending |
-| IRC-03 | Phase 3 | Pending |
+| IRC-01 | Phase 3 | Complete |
+| IRC-02 | Phase 3 | Complete |
+| IRC-03 | Phase 3 | Complete |
 | MAP-01 | Phase 1 | Pending |
 | MAP-02 | Phase 2 | Pending |
 | MAP-03 | Phase 2 | Pending |
@@ -86,7 +86,7 @@
 | ADCP-04 | Phase 1 | Pending |
 | DEV-01 | Phase 3 | Pending |
 | DEV-02 | Phase 1 | Pending |
-| DEV-03 | Phase 3 | Pending |
+| DEV-03 | Phase 3 | Complete |
 | DEV-04 | Phase 3 | Pending |
 | INFRA-01 | Phase 4 | Pending |
 | INFRA-02 | Phase 5 | Pending |
