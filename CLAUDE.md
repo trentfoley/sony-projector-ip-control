@@ -3,13 +3,13 @@
 
 **Sony Projector IR-to-ADCP Bridge**
 
-A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a TSOP38238 sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector. The Pi also serves as a WiFi-to-Ethernet NAT bridge, providing network connectivity to the projector where no ethernet run exists.
+A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a KY-022 (VS1838B) IR sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector. The Pi also serves as a WiFi-to-Ethernet NAT bridge, providing network connectivity to the projector where no ethernet run exists.
 
 **Core Value:** Press a button on the Sony remote, the projector responds — the IR receiver works again.
 
 ### Constraints
 
-- **Hardware**: Raspberry Pi 3B (existing), TSOP38238 sensor on GPIO 18
+- **Hardware**: Raspberry Pi 3B (existing), KY-022 (VS1838B) IR sensor on GPIO 18
 - **Stack**: Python 3 with asyncio, pyyaml, evdev — minimal dependencies for embedded use
 - **IR decoding**: Kernel gpio-ir overlay + ir-keytable (not pigpio — unreliable userspace timing)
 - **Connection model**: Open-per-command (connect → auth → send → close) due to projector's 60s idle timeout

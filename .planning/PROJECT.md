@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a TSOP38238 sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector. The Pi also serves as a WiFi-to-Ethernet NAT bridge, providing network connectivity to the projector where no ethernet run exists.
+A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a KY-022 (VS1838B) IR sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector. The Pi also serves as a WiFi-to-Ethernet NAT bridge, providing network connectivity to the projector where no ethernet run exists.
 
 ## Core Value
 
@@ -38,7 +38,7 @@ Press a button on the Sony remote, the projector responds — the IR receiver wo
 - **Projector**: Sony VPL-XW5000ES, ADCP over TCP:53595, ASCII protocol with `\r\n` termination
 - **Auth**: SHA256 challenge-response (or NOKEY if auth disabled in projector settings)
 - **IR protocol**: Sony SIRC (12, 15, or 20-bit — kernel tries all when protocol=sony)
-- **Hardware**: TSOP38238 IR sensor wired to RPi 3B GPIO 18 (3.3V, no external pull-up needed)
+- **Hardware**: KY-022 (VS1838B) IR sensor wired to RPi 3B GPIO 18 (3.3V, onboard pull-up on module)
 - **Network**: Pi connects to home WiFi via wlan0, projector connects to Pi's eth0 (192.168.4.0/24 subnet)
 - **Reference implementations**: tokyotexture/homeassistant-custom-components (SONY_ADCP.py), kennymc-c/ucr-integration-sonyADCP (most complete, has SHA256 auth)
 - **Risk**: Remote's exact SIRC scancodes are undocumented — mitigated by discover mode
@@ -46,7 +46,7 @@ Press a button on the Sony remote, the projector responds — the IR receiver wo
 
 ## Constraints
 
-- **Hardware**: Raspberry Pi 3B (existing), TSOP38238 sensor on GPIO 18
+- **Hardware**: Raspberry Pi 3B (existing), KY-022 (VS1838B) IR sensor on GPIO 18
 - **Stack**: Python 3 with asyncio, pyyaml, evdev — minimal dependencies for embedded use
 - **IR decoding**: Kernel gpio-ir overlay + ir-keytable (not pigpio — unreliable userspace timing)
 - **Connection model**: Open-per-command (connect → auth → send → close) due to projector's 60s idle timeout
