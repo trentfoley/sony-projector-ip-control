@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Roadmap created, ready to plan Phase 1
-last_updated: "2026-04-10T01:05:52.287Z"
-last_activity: 2026-04-10 -- Phase 01 execution started
+stopped_at: Phase 1 complete, ready to plan Phase 2
+last_updated: "2026-04-10T04:00:00.000Z"
+last_activity: 2026-04-10 -- Phase 01 execution complete (3/3 plans)
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 0
-  percent: 0
+  completed_plans: 3
+  percent: 20
 ---
 
 # Project State
@@ -21,30 +21,30 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Press a button on the Sony remote, the projector responds -- the IR receiver works again.
-**Current focus:** Phase 01 — adcp-client-config-and-mock-server
+**Current focus:** Phase 02 — command-mapper (next)
 
 ## Current Position
 
-Phase: 01 (adcp-client-config-and-mock-server) — EXECUTING
-Plan: 1 of 3
-Status: Executing Phase 01
-Last activity: 2026-04-10 -- Phase 01 execution started
+Phase: 01 (adcp-client-config-and-mock-server) — COMPLETE
+Plan: 3 of 3
+Status: Phase 01 complete, all plans executed
+Last activity: 2026-04-10 -- Phase 01 execution complete
 
-Progress: [..........] 0%
+Progress: [##........] 20%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 3
+- Average duration: ~1 min/plan (inline execution)
+- Total execution time: ~5 minutes
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01 | 3/3 | ~5 min | ~1.5 min |
 
 **Recent Trend:**
 
@@ -75,6 +75,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-09
-Stopped at: Roadmap created, ready to plan Phase 1
+Last session: 2026-04-10
+Stopped at: Phase 1 complete, ready to plan Phase 2
 Resume file: None
