@@ -53,31 +53,35 @@ def _find_config(cli_path: str | None) -> Path:
 
 
 async def _discover_loop(device) -> None:
-    """Print scancode + key name per button press (key-down only, per D-01 and D-02).
+    """Print scancode per button press.
 
-    Output format: '0xNNNNNN KEY_NAME' -- one line per button press.
+    Output format: '0xNNNNNN' -- one line per unique scancode received.
+    When a keymap is loaded, also prints the key name.
+    Deduplicates repeated scancodes from held buttons.
     """
     try:
-        # Lazy import ecodes for key name lookup
         from evdev import ecodes
     except ImportError:
         ecodes = None
 
-    last_scancode: int | None = None
+    last_printed: int | None = None
     async for event in device.async_read_loop():
         if event.type == EV_MSC and event.code == MSC_SCAN:
-            last_scancode = event.value
-        elif event.type == EV_KEY and event.value == 1:  # D-02: key-down only
-            scancode_hex = f"0x{last_scancode:06x}" if last_scancode is not None else "unknown"
-            # Look up kernel key name
-            key_name = f"KEY_UNKNOWN({event.code})"
-            if ecodes is not None:
-                name = ecodes.KEY.get(event.code, key_name)
-                if isinstance(name, list):
-                    name = name[0]  # Multiple aliases for same code
-                key_name = name
-            print(f"{scancode_hex} {key_name}")
-            last_scancode = None
+            if event.value == last_printed:
+                continue  # suppress repeats from held button
+            last_printed = event.value
+            scancode_hex = f"0x{event.value:06x}"
+            print(scancode_hex, flush=True)
+        elif event.type == EV_KEY:
+            if event.value == 0:  # key-up resets dedup
+                last_printed = None
+            # If keymap is loaded, also show key name
+            if event.value == 1 and ecodes is not None:
+                name = ecodes.KEY.get(event.code)
+                if name:
+                    if isinstance(name, list):
+                        name = name[0]
+                    log.debug("Key: %s", name)
 
 
 async def async_main(args: argparse.Namespace) -> None:

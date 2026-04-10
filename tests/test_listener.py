@@ -1,7 +1,5 @@
 """Tests for the IR listener module."""
 
-import asyncio
-import logging
 import sys
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -19,11 +17,11 @@ async def _fake_async_read_loop(events):
 class TestListen:
     """Tests for the listen() event loop."""
 
-    async def test_power_on_scancode(self, fake_ir_device, make_events):
-        """IRC-01: Power-on scancode dispatches to mapper."""
+    async def test_power_on_scancode(self, fake_ir_device):
+        """IRC-01: Power-on scancode dispatches to mapper on MSC_SCAN."""
         from projector_bridge.listener import listen
 
-        events = make_events(scancode_int=0x010015, key_value=1)
+        events = [FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015)]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
         mapper = AsyncMock()
 
@@ -31,11 +29,11 @@ class TestListen:
 
         mapper.handle_scancode.assert_called_once_with("0x010015", 1)
 
-    async def test_power_off_scancode(self, fake_ir_device, make_events):
+    async def test_power_off_scancode(self, fake_ir_device):
         """IRC-02: Power-off scancode dispatches to mapper (same physical button)."""
         from projector_bridge.listener import listen
 
-        events = make_events(scancode_int=0x010015, key_value=1)
+        events = [FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015)]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
         mapper = AsyncMock()
 
@@ -43,15 +41,13 @@ class TestListen:
 
         mapper.handle_scancode.assert_called_once_with("0x010015", 1)
 
-    async def test_nav_scancodes_key_down_and_repeat(self, fake_ir_device):
-        """IRC-03: Nav scancodes dispatch for both key-down and repeat."""
+    async def test_nav_scancodes_repeat(self, fake_ir_device):
+        """IRC-03: Each MSC_SCAN event dispatches to mapper."""
         from projector_bridge.listener import listen
 
         events = [
             FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010074),
-            FakeEvent(type=EV_KEY, code=0, value=1),  # key-down
             FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010074),
-            FakeEvent(type=EV_KEY, code=0, value=2),  # repeat
         ]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
         mapper = AsyncMock()
@@ -60,7 +56,6 @@ class TestListen:
 
         assert mapper.handle_scancode.call_count == 2
         mapper.handle_scancode.assert_any_call("0x010074", 1)
-        mapper.handle_scancode.assert_any_call("0x010074", 2)
 
     async def test_device_disappearance(self, fake_ir_device):
         """D-06: OSError from device loss raises SystemExit(1)."""
@@ -77,27 +72,14 @@ class TestListen:
             await listen(fake_ir_device, mapper)
         assert exc_info.value.code == 1
 
-    async def test_key_without_preceding_scancode(self, fake_ir_device, caplog):
-        """EV_KEY without MSC_SCAN logs warning, does not call mapper."""
-        from projector_bridge.listener import listen
-
-        events = [FakeEvent(type=EV_KEY, code=116, value=1)]
-        fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
-        mapper = AsyncMock()
-
-        with caplog.at_level(logging.WARNING):
-            await listen(fake_ir_device, mapper)
-
-        mapper.handle_scancode.assert_not_called()
-        assert "EV_KEY without preceding MSC_SCAN" in caplog.text
-
     async def test_non_ir_events_ignored(self, fake_ir_device):
-        """Events that are not EV_MSC or EV_KEY are silently ignored."""
+        """Events that are not EV_MSC/MSC_SCAN are silently ignored."""
         from projector_bridge.listener import listen
 
         events = [
             FakeEvent(type=0, code=0, value=0),  # EV_SYN
             FakeEvent(type=3, code=0, value=100),  # EV_ABS
+            FakeEvent(type=EV_KEY, code=116, value=1),  # EV_KEY ignored
         ]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
         mapper = AsyncMock()
@@ -105,25 +87,6 @@ class TestListen:
         await listen(fake_ir_device, mapper)
 
         mapper.handle_scancode.assert_not_called()
-
-    async def test_key_up_resets_scancode(self, fake_ir_device):
-        """After key-up (value=0), scancode resets so next EV_KEY needs new MSC_SCAN."""
-        from projector_bridge.listener import listen
-
-        events = [
-            FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
-            FakeEvent(type=EV_KEY, code=0, value=1),  # key-down
-            FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
-            FakeEvent(type=EV_KEY, code=0, value=0),  # key-up -> resets
-            FakeEvent(type=EV_KEY, code=0, value=1),  # no preceding MSC_SCAN
-        ]
-        fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
-        mapper = AsyncMock()
-
-        await listen(fake_ir_device, mapper)
-
-        # First key-down dispatched, key-up dispatched (value=0), orphan EV_KEY warned
-        assert mapper.handle_scancode.call_count == 2  # value=1 and value=0
 
 
 class TestFindIRDevice:

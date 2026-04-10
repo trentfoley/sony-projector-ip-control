@@ -20,46 +20,45 @@ async def _fake_async_read_loop(events):
 class TestDiscoverMode:
     """Tests for the --discover mode output."""
 
-    async def test_discover_prints_scancode_and_keyname(self, fake_ir_device, capsys):
-        """DEV-01: Discover mode prints scancode + key name per key-down."""
+    async def test_discover_prints_scancode_on_msc_scan(self, fake_ir_device, capsys):
+        """DEV-01: Discover mode prints scancode on MSC_SCAN event."""
         events = [
             FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
-            FakeEvent(type=EV_KEY, code=116, value=1),  # KEY_POWER = 116
         ]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
 
         await _discover_loop(fake_ir_device)
 
         captured = capsys.readouterr()
-        assert "0x010015" in captured.out
-        # Key name will be either from ecodes or fallback -- just verify format
-        assert captured.out.strip().startswith("0x010015")
+        assert captured.out.strip() == "0x010015"
 
-    async def test_discover_ignores_repeat_events(self, fake_ir_device, capsys):
-        """D-02: Discover mode only prints key-down (value=1), not repeats."""
+    async def test_discover_deduplicates_repeats(self, fake_ir_device, capsys):
+        """Repeated MSC_SCAN with same value only prints once (held button)."""
         events = [
             FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
-            FakeEvent(type=EV_KEY, code=116, value=2),  # repeat, not key-down
+            FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
+            FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
         ]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
 
         await _discover_loop(fake_ir_device)
 
         captured = capsys.readouterr()
-        assert captured.out == ""
+        assert captured.out.strip() == "0x010015"
 
-    async def test_discover_ignores_key_up(self, fake_ir_device, capsys):
-        """Discover mode ignores key-up events (value=0)."""
+    async def test_discover_prints_different_scancodes(self, fake_ir_device, capsys):
+        """Different scancodes each print."""
         events = [
             FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010015),
-            FakeEvent(type=EV_KEY, code=116, value=0),  # key-up
+            FakeEvent(type=EV_MSC, code=MSC_SCAN, value=0x010074),
         ]
         fake_ir_device.async_read_loop = lambda: _fake_async_read_loop(events)
 
         await _discover_loop(fake_ir_device)
 
         captured = capsys.readouterr()
-        assert captured.out == ""
+        lines = captured.out.strip().split("\n")
+        assert lines == ["0x010015", "0x010074"]
 
 
 class TestFindConfig:

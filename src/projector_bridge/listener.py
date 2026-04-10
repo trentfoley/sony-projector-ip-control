@@ -56,24 +56,13 @@ async def listen(device, mapper) -> None:
     Raises:
         SystemExit: If device disappears (OSError).
     """
-    last_scancode: str | None = None
     log.info("Listening on %s (%s)", device.path, device.name)
 
     try:
         async for event in device.async_read_loop():
             if event.type == EV_MSC and event.code == MSC_SCAN:
-                last_scancode = f"0x{event.value:06x}"
-            elif event.type == EV_KEY:
-                if last_scancode is not None:
-                    await mapper.handle_scancode(last_scancode, event.value)
-                    if event.value == 0:  # key-up resets scancode
-                        last_scancode = None
-                else:
-                    log.warning(
-                        "EV_KEY without preceding MSC_SCAN (keycode=%d, value=%d)",
-                        event.code,
-                        event.value,
-                    )
+                scancode = f"0x{event.value:06x}"
+                await mapper.handle_scancode(scancode, 1)
     except OSError as e:
         log.error("IR device lost: %s", e)
         raise SystemExit(1) from e
