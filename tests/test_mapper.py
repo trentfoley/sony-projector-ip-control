@@ -180,3 +180,81 @@ async def test_first_command_always_fires():
         mock_send.assert_called_once()
         # last_send_time should now be updated
         assert mapper._last_send_time > 0.0
+
+
+# --- Power toggle ---
+
+
+async def test_power_toggle_turns_on_from_standby():
+    """power_toggle sends power "on" when projector is in standby."""
+    mapper = _make_mapper(
+        {"0x540015": CommandMapping(command="power_toggle", description="Power")}
+    )
+    with patch(
+        "projector_bridge.mapper.send_command_with_retry", new_callable=AsyncMock
+    ) as mock_send:
+        mock_send.side_effect = ["standby", "ok"]
+        await mapper.handle_scancode("0x540015", 1)
+        await _drain_tasks()
+        assert mock_send.call_count == 2
+        mock_send.assert_any_call(mapper._config.projector, 'power_status ?')
+        mock_send.assert_any_call(mapper._config.projector, 'power "on"')
+
+
+async def test_power_toggle_turns_off_from_on():
+    """power_toggle sends power "off" when projector is on."""
+    mapper = _make_mapper(
+        {"0x540015": CommandMapping(command="power_toggle", description="Power")}
+    )
+    with patch(
+        "projector_bridge.mapper.send_command_with_retry", new_callable=AsyncMock
+    ) as mock_send:
+        mock_send.side_effect = ["on", "ok"]
+        await mapper.handle_scancode("0x540015", 1)
+        await _drain_tasks()
+        assert mock_send.call_count == 2
+        mock_send.assert_any_call(mapper._config.projector, 'power_status ?')
+        mock_send.assert_any_call(mapper._config.projector, 'power "off"')
+
+
+async def test_power_toggle_turns_on_from_saving_standby():
+    """power_toggle sends power "on" from saving_standby state."""
+    mapper = _make_mapper(
+        {"0x540015": CommandMapping(command="power_toggle", description="Power")}
+    )
+    with patch(
+        "projector_bridge.mapper.send_command_with_retry", new_callable=AsyncMock
+    ) as mock_send:
+        mock_send.side_effect = ["saving_standby", "ok"]
+        await mapper.handle_scancode("0x540015", 1)
+        await _drain_tasks()
+        mock_send.assert_any_call(mapper._config.projector, 'power "on"')
+
+
+async def test_power_toggle_ignored_during_cooling():
+    """power_toggle does nothing when projector is cooling."""
+    mapper = _make_mapper(
+        {"0x540015": CommandMapping(command="power_toggle", description="Power")}
+    )
+    with patch(
+        "projector_bridge.mapper.send_command_with_retry", new_callable=AsyncMock
+    ) as mock_send:
+        mock_send.return_value = "cooling1"
+        await mapper.handle_scancode("0x540015", 1)
+        await _drain_tasks()
+        # Only the status query, no power command
+        mock_send.assert_called_once_with(mapper._config.projector, 'power_status ?')
+
+
+async def test_power_toggle_turns_off_from_startup():
+    """power_toggle sends power "off" when projector is starting up."""
+    mapper = _make_mapper(
+        {"0x540015": CommandMapping(command="power_toggle", description="Power")}
+    )
+    with patch(
+        "projector_bridge.mapper.send_command_with_retry", new_callable=AsyncMock
+    ) as mock_send:
+        mock_send.side_effect = ["startup", "ok"]
+        await mapper.handle_scancode("0x540015", 1)
+        await _drain_tasks()
+        mock_send.assert_any_call(mapper._config.projector, 'power "off"')
