@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 verified — human hardware testing needed
-last_updated: "2026-04-10T03:05:00.000Z"
-last_activity: 2026-04-10 -- Phase 3 execution and verification complete
+stopped_at: Phase 3 hardware-verified — ready for Phase 4
+last_updated: "2026-04-11T08:10:00.000Z"
+last_activity: 2026-04-11 -- Phase 3 hardware testing complete, ADCP commands verified
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 7
-  completed_plans: 6
-  percent: 86
+  completed_plans: 7
+  percent: 93
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Press a button on the Sony remote, the projector responds -- the IR receiver works again.
-**Current focus:** Phase 03 — ir-listener-and-application (verified, human testing needed)
+**Current focus:** Phase 04 — deployment-and-hardening (next up)
 
 ## Current Position
 
-Phase: 3 (complete — pending hardware verification)
+Phase: 3 (complete — hardware verified)
 Plan: 2 of 2 complete
-Status: Verified (human_needed)
-Last activity: 2026-04-10
+Status: Complete
+Last activity: 2026-04-11
 
 Progress: [########..] 86%
 
@@ -61,7 +61,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - Roadmap: Merged config system into Phase 1 with ADCP client (config is thin, ~50 lines of dataclasses)
-- Roadmap: WiFi bridge is Phase 4 (independent, can run in parallel with Phases 1-3)
+- WiFi bridge removed — projector on home network at 192.168.1.80
 - 03-01: Used sys.modules patching for evdev mocks (lazy import inside function requires injecting into sys.modules)
 - 03-01: Scancodes extracted from EV_MSC/MSC_SCAN events, not EV_KEY.code (raw IR scancodes match config keys)
 - [Phase 03]: Lazy evdev.ecodes import in _discover_loop() with ImportError fallback for cross-platform compatibility
@@ -72,12 +72,13 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 3 requires Raspberry Pi 3B + TSOP38238 hardware for IR testing
-- Phase 4 (WiFi Bridge) removed — projector connected directly to home network at 192.168.1.80
 - Projector must have "Network Standby" enabled or ADCP is unreachable in deep standby
+- ir-keytable -p sony must be run after each reboot (Phase 4 will fix via systemd)
+- ADCP commands blocked while projector OSD menu is open
+- Some remote buttons unmapped (test pattern, 3D, color space, RCP, gamma)
 
 ## Session Continuity
 
-Last session: 2026-04-10T02:49:00.795Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-04-11T08:10:00.000Z
+Stopped at: Phase 3 hardware-verified, ready for Phase 4 (Deployment and Hardening)
 Resume file: None
