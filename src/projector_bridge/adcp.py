@@ -19,6 +19,7 @@ _ERROR_MAP: dict[str, type[Exception]] = {
     "err_auth": AuthError,
     "err_cmd": CommandError,
     "err_val": CommandValueError,
+    "err_option": CommandValueError,
     "err_inactive": InactiveError,
 }
 
@@ -43,6 +44,7 @@ def parse_response(response: str) -> str:
                     "err_auth": "Authentication failed",
                     "err_cmd": "Unknown command",
                     "err_val": "Invalid parameter value",
+                    "err_option": "Invalid option for this command",
                     "err_inactive": "Projector inactive (deep standby?)",
                 }[prefix]
             )
@@ -54,7 +56,7 @@ def parse_response(response: str) -> str:
     if response.startswith('"') and response.endswith('"'):
         return response[1:-1]
 
-    log.warning("Unexpected ADCP response format: %s", response)
+    # Unquoted values are normal for numeric/enum queries (e.g. brightness -> 50)
     return response
 
 

@@ -139,8 +139,8 @@ async def test_rate_limit_allows_after_interval():
         await _drain_tasks()
         assert mock_send.call_count == 1
 
-        # Push last_send_time back so it appears >100ms has passed
-        mapper._last_send_time = asyncio.get_event_loop().time() - 0.2
+        # Push last_send_time back so it appears >250ms has passed
+        mapper._last_send_time = asyncio.get_event_loop().time() - 0.3
         await mapper.handle_scancode("0x010074", 2)
         await _drain_tasks()
         assert mock_send.call_count == 2

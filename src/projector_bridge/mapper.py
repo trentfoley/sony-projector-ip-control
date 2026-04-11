@@ -10,7 +10,7 @@ from projector_bridge.errors import ADCPError
 log = logging.getLogger(__name__)
 
 # Minimum interval between ADCP sends in seconds
-_RATE_LIMIT_SECONDS = 0.1
+_RATE_LIMIT_SECONDS = 0.25
 
 
 class CommandMapper:
@@ -64,11 +64,17 @@ class CommandMapper:
     async def _send(self, command: str, scancode: str) -> None:
         """Send an ADCP command, logging errors without propagating.
 
-        Handles special command "power_toggle" by querying power_status first.
+        Handles special commands that require query-then-set logic.
         """
         try:
             if command == "power_toggle":
                 await self._power_toggle(scancode)
+            elif command == "input_toggle":
+                await self._input_toggle(scancode)
+            elif command.endswith("_up") or command.endswith("_down"):
+                await self._adjust(command, scancode)
+            elif command.endswith("_toggle"):
+                await self._setting_toggle(command, scancode)
             else:
                 await send_command_with_retry(self._config.projector, command)
                 log.debug("Sent ADCP command: %s (scancode: %s)", command, scancode)
@@ -82,14 +88,76 @@ class CommandMapper:
         )
         log.debug("Power status: %s (scancode: %s)", status, scancode)
 
-        # States where we should turn on
         if status in ("standby", "saving_standby"):
             await send_command_with_retry(self._config.projector, 'power "on"')
             log.info("Power ON (was %s)", status)
-        # States where we should turn off
         elif status in ("on", "startup"):
             await send_command_with_retry(self._config.projector, 'power "off"')
             log.info("Power OFF (was %s)", status)
-        # Cooling/transitional states — ignore
         else:
             log.info("Power toggle ignored — projector is %s", status)
+
+    async def _input_toggle(self, scancode: str) -> None:
+        """Toggle between hdmi1 and hdmi2."""
+        current = await send_command_with_retry(
+            self._config.projector, 'input ?'
+        )
+        target = "hdmi2" if current == "hdmi1" else "hdmi1"
+        await send_command_with_retry(
+            self._config.projector, f'input "{target}"'
+        )
+        log.info("Input: %s -> %s", current, target)
+
+    async def _adjust(self, command: str, scancode: str) -> None:
+        """Query current value, increment/decrement by 1, and set.
+
+        Command format: 'brightness_up', 'contrast_down', etc.
+        """
+        if command.endswith("_up"):
+            setting = command[:-3]
+            delta = 1
+        else:
+            setting = command[:-5]
+            delta = -1
+
+        raw = await send_command_with_retry(
+            self._config.projector, f'{setting} ?'
+        )
+        try:
+            current = int(raw)
+        except (ValueError, TypeError):
+            log.error("Cannot parse %s value: %s", setting, raw)
+            return
+
+        new_val = max(0, min(100, current + delta))
+        if new_val == current:
+            log.debug("%s already at limit: %d", setting, current)
+            return
+
+        await send_command_with_retry(
+            self._config.projector, f'{setting} {new_val}'
+        )
+        log.info("%s: %d -> %d", setting, current, new_val)
+
+    async def _setting_toggle(self, command: str, scancode: str) -> None:
+        """Toggle a setting between on/off.
+
+        Command format: 'real_cre_toggle', 'motionflow_toggle', etc.
+        """
+        setting = command[:-7]  # strip '_toggle'
+        current = await send_command_with_retry(
+            self._config.projector, f'{setting} ?'
+        )
+
+        if current == "off":
+            target = "on"
+        elif current == "on":
+            target = "off"
+        else:
+            # Non-boolean setting (e.g. motionflow "true_cinema") — cycle to off
+            target = "off"
+
+        await send_command_with_retry(
+            self._config.projector, f'{setting} "{target}"'
+        )
+        log.info("%s: %s -> %s", setting, current, target)
