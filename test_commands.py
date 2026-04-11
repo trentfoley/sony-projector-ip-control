@@ -7,30 +7,39 @@ from projector_bridge.config import ProjectorConfig
 cfg = ProjectorConfig(host="192.168.1.80")
 
 PROBES = [
-    # Picture preset command name candidates
-    "calibration_preset ?",
-    "picture_mode ?",
-    "preset ?",
-    "pic_preset ?",
-    "image_preset ?",
-    # Brightness/contrast/sharpness — relative vs absolute
-    "brightness ?",
-    "contrast ?",
-    "sharpness ?",
-    # Advanced settings
-    "real_cre ?",
-    "reality_creation ?",
-    "motion_enhancer ?",
-    "motionflow ?",
+    # Picture preset values — current is cinema_film1
+    'picture_mode "cinema_film1"',
+    'picture_mode "cinema_film2"',
+    'picture_mode "reference"',
+    'picture_mode "tv"',
+    'picture_mode "photo"',
+    'picture_mode "game"',
+    'picture_mode "bright_cinema"',
+    'picture_mode "bright_tv"',
+    'picture_mode "user"',
+    'picture_mode "imax"',
+    # Brightness relative — try setting +1/-1 from current (50)
+    'brightness "51"',
+    'brightness "50"',
+    # Contrast enhancer candidates
     "contrast_enhancer ?",
-    # Key-based commands
+    "adv_contrast ?",
+    "dynamic_contrast ?",
+    "contrast_remaster ?",
+    # Key commands for remaining buttons
     'key "pattern"',
-    'key "aspect"',
+    'key "test_pattern"',
     'key "3d"',
-    'key "color_space"',
-    'key "color_temp"',
-    'key "gamma"',
+    'key "3D"',
     'key "rcp"',
+    'key "menu"',
+    'key "up"',
+    'key "enter"',
+    'key "reset"',
+    # Input cycling
+    'input ?',
+    'input "hdmi1"',
+    'input "hdmi2"',
 ]
 
 
@@ -46,7 +55,7 @@ async def main():
     print("Probing projector at 192.168.1.80:53595...\n")
     for cmd in PROBES:
         await try_cmd(cmd)
-    print("\nDone. Commands that returned OK are valid.")
+    print("\nDone.")
 
 
 if __name__ == "__main__":
