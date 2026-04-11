@@ -3,7 +3,7 @@
 
 **Sony Projector IR-to-ADCP Bridge**
 
-A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a KY-022 (VS1838B) IR sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector. The Pi also serves as a WiFi-to-Ethernet NAT bridge, providing network connectivity to the projector where no ethernet run exists.
+A Python daemon running on a Raspberry Pi 3B that restores remote control functionality to a Sony VPL-XW5000ES projector with a broken IR receiver. It receives Sony SIRC IR commands via a KY-022 (VS1838B) IR sensor and translates them into ADCP (Advanced Display Control Protocol) commands sent over TCP to the projector.
 
 **Core Value:** Press a button on the Sony remote, the projector responds — the IR receiver works again.
 
@@ -13,7 +13,7 @@ A Python daemon running on a Raspberry Pi 3B that restores remote control functi
 - **Stack**: Python 3 with asyncio, pyyaml, evdev — minimal dependencies for embedded use
 - **IR decoding**: Kernel gpio-ir overlay + ir-keytable (not pigpio — unreliable userspace timing)
 - **Connection model**: Open-per-command (connect → auth → send → close) due to projector's 60s idle timeout
-- **Network**: NAT routing only (true L2 bridging impossible over WiFi)
+- **Network**: Projector on home network at 192.168.1.80 (direct ethernet)
 <!-- GSD:project-end -->
 
 <!-- GSD:stack-start source:research/STACK.md -->
@@ -52,12 +52,6 @@ A Python daemon running on a Raspberry Pi 3B that restores remote control functi
 | signal | Graceful shutdown | SIGTERM/SIGINT handlers for clean asyncio shutdown |
 | pathlib | File path handling | For config file search across multiple locations |
 | argparse | CLI argument parsing | `--config`, `--discover`, `--log-level` flags |
-### WiFi Bridge (System Packages)
-| Technology | Version | Purpose | Why | Confidence |
-|------------|---------|---------|-----|------------|
-| NetworkManager (nmcli) | System default | NAT + DHCP on eth0 | Bookworm ships with NetworkManager. `nmcli con modify "Wired connection 1" ipv4.method shared` auto-configures NAT, DHCP, and DNS forwarding in one command. No manual iptables or dnsmasq config needed | HIGH |
-| iptables-persistent | apt package | Persist firewall rules | Only needed if customizing beyond what `ipv4.method shared` provides (e.g., specific subnet). NetworkManager's shared mode handles the common case | MEDIUM |
-| dnsmasq | apt package | DHCP/DNS server | NetworkManager uses dnsmasq internally when `ipv4.method shared` is set. May need explicit install if not pulled as a dependency. Fallback: configure manually if NetworkManager's defaults (10.42.0.0/24) don't work and you need 192.168.4.0/24 | MEDIUM |
 ### Build & Packaging
 | Technology | Purpose | Why | Confidence |
 |------------|---------|-----|------------|

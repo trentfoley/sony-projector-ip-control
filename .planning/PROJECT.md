@@ -21,7 +21,7 @@ Press a button on the Sony remote, the projector responds — the IR receiver wo
 
 - [ ] IR commands received via kernel gpio-ir overlay + evdev on GPIO 18
 - [ ] Power on/off, input switching, menu navigation, and blanking work from the remote
-- [ ] WiFi-to-Ethernet NAT bridge gives the projector network access via the Pi's wlan0
+- ~~WiFi-to-Ethernet NAT bridge~~ — Removed: projector connected directly to home network (192.168.1.80)
 - [ ] systemd services auto-start both the IR bridge and WiFi bridge on boot
 - [ ] Discover mode prints raw scancodes to aid mapping new remote buttons
 - [ ] Mock ADCP server enables development and testing without the projector
@@ -39,7 +39,7 @@ Press a button on the Sony remote, the projector responds — the IR receiver wo
 - **Auth**: SHA256 challenge-response (or NOKEY if auth disabled in projector settings)
 - **IR protocol**: Sony SIRC (12, 15, or 20-bit — kernel tries all when protocol=sony)
 - **Hardware**: KY-022 (VS1838B) IR sensor wired to RPi 3B GPIO 18 (3.3V, onboard pull-up on module)
-- **Network**: Pi connects to home WiFi via wlan0, projector connects to Pi's eth0 (192.168.4.0/24 subnet)
+- **Network**: Projector connected directly to home network via ethernet at 192.168.1.80
 - **Reference implementations**: tokyotexture/homeassistant-custom-components (SONY_ADCP.py), kennymc-c/ucr-integration-sonyADCP (most complete, has SHA256 auth)
 - **Risk**: Remote's exact SIRC scancodes are undocumented — mitigated by discover mode
 - **Risk**: Projector may reject ADCP in deep standby — requires "Network Standby" enabled in projector settings

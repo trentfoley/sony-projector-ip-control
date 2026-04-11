@@ -7,7 +7,7 @@ stopped_at: Phase 3 verified — human hardware testing needed
 last_updated: "2026-04-10T03:05:00.000Z"
 last_activity: 2026-04-10 -- Phase 3 execution and verification complete
 progress:
-  total_phases: 5
+  total_phases: 4
   completed_phases: 3
   total_plans: 7
   completed_plans: 6
@@ -73,7 +73,7 @@ None yet.
 ### Blockers/Concerns
 
 - Phase 3 requires Raspberry Pi 3B + TSOP38238 hardware for IR testing
-- Phase 4 requires Pi hardware for WiFi bridge testing
+- Phase 4 (WiFi Bridge) removed — projector connected directly to home network at 192.168.1.80
 - Projector must have "Network Standby" enabled or ADCP is unreachable in deep standby
 
 ## Session Continuity
