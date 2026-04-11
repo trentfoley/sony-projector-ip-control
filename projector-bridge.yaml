@@ -130,10 +130,6 @@ mappings:
     command: "motionflow_toggle"
     repeat: false
     description: "Motion Enhancer"
-  "0x540007":
-    command: "hdr_toggle"
-    repeat: false
-    description: "HDR/Contrast Enhancer"
   "0x1a2a6e":
     command: 'key "aspect"'
     repeat: false
