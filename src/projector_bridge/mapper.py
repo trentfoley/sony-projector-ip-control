@@ -23,6 +23,7 @@ class CommandMapper:
     def __init__(self, config: Config) -> None:
         self._config = config
         self._last_send_time: float = 0.0
+        self._previous_values: dict[str, str] = {}
 
     async def handle_scancode(self, scancode: str, event_value: int) -> None:
         """Process a single IR scancode event.
@@ -140,9 +141,10 @@ class CommandMapper:
         log.info("%s: %d -> %d", setting, current, new_val)
 
     async def _setting_toggle(self, command: str, scancode: str) -> None:
-        """Toggle a setting between on/off.
+        """Toggle a setting between states.
 
-        Command format: 'real_cre_toggle', 'motionflow_toggle', etc.
+        Command format: 'real_cre_toggle', 'motionflow_toggle', 'hdr_toggle'.
+        Remembers the previous non-off value so toggling back restores it.
         """
         setting = command[:-7]  # strip '_toggle'
         current = await send_command_with_retry(
@@ -150,11 +152,11 @@ class CommandMapper:
         )
 
         if current == "off":
-            target = "on"
-        elif current == "on":
-            target = "off"
+            # Restore previous value, or use sensible defaults
+            target = self._previous_values.get(setting, "on")
         else:
-            # Non-boolean setting (e.g. motionflow "true_cinema") — cycle to off
+            # Save current value before turning off
+            self._previous_values[setting] = current
             target = "off"
 
         await send_command_with_retry(
