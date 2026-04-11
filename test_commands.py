@@ -7,39 +7,38 @@ from projector_bridge.config import ProjectorConfig
 cfg = ProjectorConfig(host="192.168.1.80")
 
 PROBES = [
-    # Picture preset values — current is cinema_film1
-    'picture_mode "cinema_film1"',
-    'picture_mode "cinema_film2"',
-    'picture_mode "reference"',
-    'picture_mode "tv"',
-    'picture_mode "photo"',
-    'picture_mode "game"',
-    'picture_mode "bright_cinema"',
-    'picture_mode "bright_tv"',
-    'picture_mode "user"',
-    'picture_mode "imax"',
-    # Brightness relative — try setting +1/-1 from current (50)
-    'brightness "51"',
-    'brightness "50"',
-    # Contrast enhancer candidates
-    "contrast_enhancer ?",
-    "adv_contrast ?",
-    "dynamic_contrast ?",
-    "contrast_remaster ?",
-    # Key commands for remaining buttons
-    'key "pattern"',
-    'key "test_pattern"',
-    'key "3d"',
-    'key "3D"',
-    'key "rcp"',
-    'key "menu"',
-    'key "up"',
-    'key "enter"',
-    'key "reset"',
-    # Input cycling
-    'input ?',
-    'input "hdmi1"',
-    'input "hdmi2"',
+    # Brightness set — try unquoted numeric
+    "brightness 51",
+    "brightness 50",
+    # Bright Cinema/TV name variants
+    'picture_mode "bravia_cinema"',
+    'picture_mode "brt_cine"',
+    'picture_mode "brt_cinema"',
+    'picture_mode "brightcine"',
+    'picture_mode "cinema_bright"',
+    'picture_mode "brt_tv"',
+    'picture_mode "bravia_tv"',
+    # Contrast enhancer / HDR enhancer variants
+    "hdr ?",
+    "hdr_enhance ?",
+    "dynamic_range ?",
+    "dci ?",
+    "tone_mapping ?",
+    # Motionflow values (current is true_cinema)
+    "motionflow ?",
+    # Gamma
+    "gamma ?",
+    # Color space
+    "color_space ?",
+    "color ?",
+    # Color temp
+    "color_temp ?",
+    # Reality creation current
+    "real_cre ?",
+    # Key names — more attempts
+    'key "colorspace"',
+    'key "color"',
+    'key "gammaCorrection"',
 ]
 
 
