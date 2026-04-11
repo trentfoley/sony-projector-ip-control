@@ -54,6 +54,7 @@ async def main():
     print("Probing projector at 192.168.1.80:53595...\n")
     for cmd in PROBES:
         await try_cmd(cmd)
+        await asyncio.sleep(0.5)
     print("\nDone.")
 
 
