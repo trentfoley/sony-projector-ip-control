@@ -1,0 +1,26 @@
+[Unit]
+Description=Sony Projector IR-to-ADCP Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=trent
+Group=input
+WorkingDirectory=/home/trent/sony-projector-ip-control
+ExecStartPre=/usr/bin/ir-keytable -s rc0 -p sony
+ExecStart=/home/trent/sony-projector-ip-control/.venv/bin/projector-bridge --log-level INFO
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+# Security hardening
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/trent/sony-projector-ip-control
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
