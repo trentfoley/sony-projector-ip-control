@@ -16,15 +16,14 @@ Press a button on the Sony remote, the projector responds — the IR receiver wo
 - [x] Scancode-to-ADCP command mapping is configurable via YAML — Validated in Phase 1: Config system
 - [x] Mock ADCP server enables development and testing without the projector — Validated in Phase 1: Mock Server
 - [x] Debounce/repeat logic prevents projector flooding while supporting held buttons — Validated in Phase 2: Command Mapper
+- [x] IR commands received via kernel gpio-ir overlay + evdev on GPIO 18 — Validated in Phase 3: IR Listener
+- [x] Power on/off, input switching, menu navigation, and blanking work from the remote — Validated in Phase 3: Application wiring
+- [x] Discover mode prints raw scancodes to aid mapping new remote buttons — Validated in Phase 3: Application wiring
+- [x] systemd service auto-starts IR bridge on boot with crash recovery — Validated in Phase 4: Deployment and Hardening (human verification pending)
 
 ### Active
 
-- [ ] IR commands received via kernel gpio-ir overlay + evdev on GPIO 18
-- [ ] Power on/off, input switching, menu navigation, and blanking work from the remote
 - ~~WiFi-to-Ethernet NAT bridge~~ — Removed: projector connected directly to home network (192.168.1.80)
-- [ ] systemd services auto-start both the IR bridge and WiFi bridge on boot
-- [ ] Discover mode prints raw scancodes to aid mapping new remote buttons
-- [ ] Mock ADCP server enables development and testing without the projector
 
 ### Out of Scope
 
@@ -80,4 +79,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-09 after Phase 2 completion*
+*Last updated: 2026-04-11 after Phase 4 completion — all 4 phases complete, human UAT pending for deployment verification on RPi*
