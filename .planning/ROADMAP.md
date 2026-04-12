@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Command Mapper** - Scancode-to-ADCP translation with debounce, repeat handling, and rate limiting
 - [ ] **Phase 3: IR Listener and Application** - evdev IR reception, discover mode, full pipeline wiring, and graceful shutdown
 - ~~**Phase 4: WiFi Bridge**~~ - REMOVED: Projector connected directly to home network via ethernet (192.168.1.80)
-- [ ] **Phase 4: Deployment and Hardening** - systemd services, install script, and hardware watchdog for unattended operation
+- [ ] **Phase 4: Deployment and Hardening** - systemd service, install script, and crash recovery for unattended operation
 
 ## Phase Details
 
@@ -62,15 +62,17 @@ Plans:
 Projector connected directly to home network via ethernet (192.168.1.80). WiFi bridge no longer needed.
 
 ### Phase 4: Deployment and Hardening
-**Goal**: The complete system starts automatically on boot and recovers from hangs without manual intervention
+**Goal**: The IR bridge starts automatically on boot and recovers from crashes without manual intervention
 **Depends on**: Phase 3
 **Requirements**: INFRA-02, INFRA-03, INFRA-04
 **Success Criteria** (what must be TRUE):
-  1. After a cold boot, both the IR bridge and WiFi bridge are running without manual intervention
+  1. After a cold boot, the IR bridge service is running without manual intervention
   2. Running the install script on a fresh Raspberry Pi OS Bookworm image results in a fully operational system
-  3. If the IR bridge daemon hangs (stops notifying systemd), the Pi reboots itself within 30 seconds
-  4. Services restart automatically after a crash (Restart=always)
-**Plans**: TBD
+  3. Services restart automatically after a crash (Restart=always, RestartSec=3)
+  4. INFRA-04 (hardware watchdog) is descoped from v1 per D-03 -- systemd Restart=always handles recovery
+**Plans**: 1 plan
+Plans:
+- [ ] 04-01-PLAN.md — systemd service unit, example config, and install script
 
 ## Progress
 
@@ -83,4 +85,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 2. Command Mapper | 2/2 | Complete | 2026-04-10 |
 | 3. IR Listener and Application | 2/2 | Complete (hardware verification pending) | 2026-04-10 |
 | ~~4. WiFi Bridge~~ | — | Removed | — |
-| 4. Deployment and Hardening | 0/TBD | Not started | - |
+| 4. Deployment and Hardening | 0/1 | Not started | - |
