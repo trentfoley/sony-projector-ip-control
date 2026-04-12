@@ -72,7 +72,7 @@ Projector connected directly to home network via ethernet (192.168.1.80). WiFi b
   4. INFRA-04 (hardware watchdog) is descoped from v1 per D-03 -- systemd Restart=always handles recovery
 **Plans**: 1 plan
 Plans:
-- [ ] 04-01-PLAN.md — systemd service unit, example config, and install script
+- [x] 04-01-PLAN.md — systemd service unit, example config, and install script
 
 ## Progress
 
